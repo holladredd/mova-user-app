@@ -1,121 +1,225 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const MovaUserApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class MovaUserApp extends StatelessWidget {
+  const MovaUserApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'MOVA User',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: .fromSeed(seedColor: Colors.deepPurple),
+        brightness: Brightness.light,
+        scaffoldBackgroundColor: const Color(0xFFFAFAFA),
+        colorScheme: const ColorScheme.light(
+          primary: Color(0xFF0F172A),
+          secondary: Color(0xFFD4AF37),
+        ),
+        fontFamily: 'Inter',
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      darkTheme: ThemeData(
+        brightness: Brightness.dark,
+        scaffoldBackgroundColor: const Color(0xFF050505),
+        colorScheme: const ColorScheme.dark(
+          primary: Color(0xFFFFFFFF),
+          secondary: Color(0xFFD4AF37),
+        ),
+        fontFamily: 'Inter',
+      ),
+      themeMode: ThemeMode.system,
+      home: const UserHomeMock(),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
+class UserHomeMock extends StatelessWidget {
+  const UserHomeMock({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    
     return Scaffold(
       appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
+        elevation: 0,
+        backgroundColor: Colors.transparent,
+        title: SvgPicture.asset(
+          isDark ? 'assets/logo-dark.svg' : 'assets/logo-light.svg',
+          height: 32,
+        ),
+        centerTitle: true,
       ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: .center,
-          children: [
-            const Text('You have pushed the button this many times:'),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(24.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Good morning,',
+                style: TextStyle(
+                  fontSize: 16,
+                  color: isDark ? Colors.white70 : Colors.black54,
+                ),
+              ),
+              const SizedBox(height: 4),
+              const Text(
+                'Alex Doe',
+                style: TextStyle(
+                  fontSize: 28,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 32),
+              
+              // Action Cards
+              Row(
+                children: [
+                  Expanded(
+                    child: _buildActionCard(
+                      context,
+                      'Send Item',
+                      Icons.local_shipping_outlined,
+                      Theme.of(context).colorScheme.primary,
+                      isDark ? Colors.black : Colors.white,
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: _buildActionCard(
+                      context,
+                      'Track',
+                      Icons.location_searching_rounded,
+                      Theme.of(context).colorScheme.secondary,
+                      const Color(0xFF0F172A),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 40),
+              
+              const Text(
+                'Active Deliveries',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 16),
+              
+              // Mock Delivery Card
+              Container(
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  color: isDark ? const Color(0xFF1A1A1A) : Colors.white,
+                  borderRadius: BorderRadius.circular(16),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.05),
+                      blurRadius: 10,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
+                ),
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          'MOVA-8392',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).colorScheme.secondary.withOpacity(0.2),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Text(
+                            'In Transit',
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.secondary,
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+                    Row(
+                      children: [
+                        const Icon(Icons.my_location, size: 20, color: Colors.grey),
+                        const SizedBox(width: 8),
+                        const Expanded(child: Text('123 Victoria Island, Lagos')),
+                      ],
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.only(left: 9.0),
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: SizedBox(
+                          height: 20,
+                          child: VerticalDivider(color: Colors.grey, thickness: 1),
+                        ),
+                      ),
+                    ),
+                    Row(
+                      children: [
+                        const Icon(Icons.location_on, size: 20, color: Colors.redAccent),
+                        const SizedBox(width: 8),
+                        const Expanded(child: Text('Lekki Phase 1, Lagos')),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
+      bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: isDark ? const Color(0xFF1A1A1A) : Colors.white,
+        selectedItemColor: Theme.of(context).colorScheme.secondary,
+        unselectedItemColor: Colors.grey,
+        type: BottomNavigationBarType.fixed,
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+          BottomNavigationBarItem(icon: Icon(Icons.list_alt), label: 'Activity'),
+          BottomNavigationBarItem(icon: Icon(Icons.account_balance_wallet), label: 'Wallet'),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildActionCard(BuildContext context, String title, IconData icon, Color bgColor, Color textColor) {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: bgColor,
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(icon, color: textColor, size: 32),
+          const SizedBox(height: 16),
+          Text(
+            title,
+            style: TextStyle(
+              color: textColor,
+              fontWeight: FontWeight.bold,
+              fontSize: 16,
+            ),
+          ),
+        ],
       ),
     );
   }
