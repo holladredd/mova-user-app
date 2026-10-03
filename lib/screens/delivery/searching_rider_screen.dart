@@ -168,8 +168,11 @@ class _SearchingRiderScreenState extends State<SearchingRiderScreen> with Single
                                 width: double.infinity,
                                 child: ElevatedButton(
                                   onPressed: () {
-                                    // Accept bid and go to tracking
-                                    Navigator.pushReplacementNamed(context, '/track');
+                                    Navigator.pushNamed(
+                                      context,
+                                      '/payment',
+                                      arguments: bid,
+                                    );
                                   },
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: charcoal,

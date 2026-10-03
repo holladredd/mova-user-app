@@ -79,10 +79,21 @@ class _HomeTab extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             SvgPicture.asset('assets/logo-dark.svg', height: 36),
-                            Container(
-                              width: 44, height: 44,
-                              decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.white.withValues(alpha: 0.1)),
-                              child: const Icon(Icons.notifications_outlined, color: Colors.white),
+                            GestureDetector(
+                              onTap: () => Navigator.pushNamed(context, '/notifications'),
+                              child: Stack(
+                                children: [
+                                  Container(
+                                    width: 44, height: 44,
+                                    decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.white.withValues(alpha: 0.1)),
+                                    child: const Icon(Icons.notifications_outlined, color: Colors.white),
+                                  ),
+                                  Positioned(
+                                    top: 8, right: 8,
+                                    child: Container(width: 10, height: 10, decoration: const BoxDecoration(color: Colors.red, shape: BoxShape.circle)),
+                                  ),
+                                ],
+                              ),
                             ),
                           ],
                         ),

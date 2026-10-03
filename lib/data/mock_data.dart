@@ -14,20 +14,24 @@ class MockData {
     {
       'id': 'rid_1',
       'firstName': 'Emeka',
-      'lastName': 'A.',
+      'lastName': 'Adeyemi',
       'phone': '+2348000000002',
       'avatar': 'E',
-      'vehicle': {'type': 'BIKE', 'plateNumber': 'LGA-4821-BD', 'make': 'Kawasaki'},
+      'vehicle': {'type': 'Bike', 'plateNumber': 'LGA-4821-BD', 'make': 'Kawasaki'},
       'rating': 4.9,
+      'trips': 142,
+      'balance': 8300,
     },
     {
       'id': 'rid_2',
       'firstName': 'Sarah',
-      'lastName': 'O.',
+      'lastName': 'Okonkwo',
       'phone': '+2348000000003',
       'avatar': 'S',
-      'vehicle': {'type': 'BIKE', 'plateNumber': 'KJA-1234-AB', 'make': 'Honda'},
+      'vehicle': {'type': 'Bike', 'plateNumber': 'KJA-1234-AB', 'make': 'Honda'},
       'rating': 4.7,
+      'trips': 89,
+      'balance': 4200,
     },
   ];
 

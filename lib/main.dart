@@ -11,6 +11,9 @@ import 'screens/delivery/searching_rider_screen.dart';
 import 'screens/profile/profile_screen.dart';
 import 'screens/wallet/wallet_screen.dart';
 import 'screens/activity/activity_screen.dart';
+import 'screens/notifications/notification_screen.dart';
+import 'screens/delivery/delivery_review_screen.dart';
+import 'screens/delivery/payment_screen.dart';
 
 void main() {
   runApp(const MovaUserApp());
@@ -74,10 +77,13 @@ class MovaUserApp extends StatelessWidget {
         '/home': (_) => const HomeScreen(),
         '/create-delivery': (_) => const CreateDeliveryScreen(),
         '/searching-rider': (_) => const SearchingRiderScreen(),
+        '/payment': (_) => const PaymentScreen(),
         '/track': (_) => const TrackDeliveryScreen(),
         '/profile': (_) => const ProfileScreen(),
         '/wallet': (_) => const WalletScreen(),
         '/activity': (_) => const ActivityScreen(),
+        '/notifications': (_) => const NotificationScreen(),
+        '/review': (_) => const DeliveryReviewScreen(),
       },
     );
   }
