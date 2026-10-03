@@ -100,4 +100,28 @@ class MockData {
     {'id': 'tx_2', 'type': 'DEBIT', 'amount': 2500, 'desc': 'Delivery MOVA-8392', 'date': DateTime.now().subtract(const Duration(hours: 1)).toIso8601String()},
     {'id': 'tx_3', 'type': 'DEBIT', 'amount': 3500, 'desc': 'Delivery MOVA-1145', 'date': DateTime.now().subtract(const Duration(days: 1)).toIso8601String()},
   ];
+
+  static const List<Map<String, dynamic>> mockBids = [
+    {
+      'id': 'bid_1',
+      'rider': {'name': 'Emeka A.', 'rating': 4.9, 'avatar': 'E', 'trips': 142},
+      'price': 1800,
+      'eta': '5 mins',
+      'distance': '1.2 km away',
+    },
+    {
+      'id': 'bid_2',
+      'rider': {'name': 'Sarah O.', 'rating': 4.7, 'avatar': 'S', 'trips': 89},
+      'price': 1500,
+      'eta': '8 mins',
+      'distance': '2.5 km away',
+    },
+    {
+      'id': 'bid_3',
+      'rider': {'name': 'David K.', 'rating': 4.5, 'avatar': 'D', 'trips': 45},
+      'price': 2200,
+      'eta': '3 mins',
+      'distance': '0.5 km away',
+    }
+  ];
 }

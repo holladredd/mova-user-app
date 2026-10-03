@@ -14,9 +14,9 @@ class _CreateDeliveryScreenState extends State<CreateDeliveryScreen> {
   bool _loading = false;
 
   final List<Map<String, dynamic>> _sizes = [
-    {'key': 'SMALL', 'label': 'Small', 'desc': 'Documents, phone, small items', 'icon': Icons.inventory_2_outlined, 'price': '₦1,200 – ₦2,000'},
-    {'key': 'MEDIUM', 'label': 'Medium', 'desc': 'Shoes, clothing, mid-sized box', 'icon': Icons.inbox_outlined, 'price': '₦2,000 – ₦4,000'},
-    {'key': 'LARGE', 'label': 'Large', 'desc': 'Appliances, large parcels', 'icon': Icons.local_shipping_outlined, 'price': '₦4,000 – ₦8,000'},
+    {'key': 'SMALL', 'label': 'Small', 'desc': 'Documents, phone, small items', 'icon': Icons.inventory_2_outlined},
+    {'key': 'MEDIUM', 'label': 'Medium', 'desc': 'Shoes, clothing, mid-sized box', 'icon': Icons.inbox_outlined},
+    {'key': 'LARGE', 'label': 'Large', 'desc': 'Appliances, large parcels', 'icon': Icons.local_shipping_outlined},
   ];
 
   @override
@@ -85,7 +85,7 @@ class _CreateDeliveryScreenState extends State<CreateDeliveryScreen> {
                 ),
                 child: _loading
                     ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
-                    : Text(_step < 2 ? 'Continue' : 'Confirm & Book', style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                    : Text(_step < 2 ? 'Continue' : 'Find Riders', style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
               ),
             ),
           ),
@@ -175,8 +175,8 @@ class _CreateDeliveryScreenState extends State<CreateDeliveryScreen> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Text('Estimated Price', style: TextStyle(fontSize: 16, color: Colors.grey)),
-            Text(sizeData['price'] as String, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            const Text('Rider Fee', style: TextStyle(fontSize: 16, color: Colors.grey)),
+            Text('Open to Bids', style: TextStyle(color: gold, fontSize: 18, fontWeight: FontWeight.bold)),
           ],
         ),
         const SizedBox(height: 16),
@@ -191,7 +191,7 @@ class _CreateDeliveryScreenState extends State<CreateDeliveryScreen> {
             children: [
               Icon(Icons.info_outline, color: gold),
               const SizedBox(width: 12),
-              const Expanded(child: Text('Final price is calculated based on distance and is confirmed when a rider accepts.', style: TextStyle(fontSize: 13))),
+              const Expanded(child: Text('Riders will bid on your request. You can review their offers, ratings, and distances before accepting the best one.', style: TextStyle(fontSize: 13))),
             ],
           ),
         ),
