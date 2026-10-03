@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../data/mock_data.dart';
 
 class DeliveryCard extends StatelessWidget {
-  final DeliveryModel delivery;
+  final Map<String, dynamic> delivery;
   final bool isCompact;
 
   const DeliveryCard({super.key, required this.delivery, this.isCompact = false});
@@ -10,8 +10,8 @@ class DeliveryCard extends StatelessWidget {
   Color _statusColor(String status) {
     switch (status) {
       case 'IN_TRANSIT': return const Color(0xFF3B82F6);
-      case 'DELIVERED': return const Color(0xFF22C55E);
-      case 'PENDING': return const Color(0xFFD4AF37);
+      case 'COMPLETED': return const Color(0xFF22C55E);
+      case 'SEARCHING_RIDER': return const Color(0xFFD4AF37);
       case 'CANCELLED': return const Color(0xFFEF4444);
       default: return Colors.grey;
     }
@@ -20,8 +20,8 @@ class DeliveryCard extends StatelessWidget {
   String _statusLabel(String status) {
     switch (status) {
       case 'IN_TRANSIT': return 'In Transit';
-      case 'DELIVERED': return 'Delivered';
-      case 'PENDING': return 'Pending';
+      case 'COMPLETED': return 'Delivered';
+      case 'SEARCHING_RIDER': return 'Searching';
       case 'CANCELLED': return 'Cancelled';
       default: return status;
     }
@@ -31,7 +31,7 @@ class DeliveryCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final cardBg = isDark ? const Color(0xFF1A1A1A) : Colors.white;
-    final statusColor = _statusColor(delivery.status);
+    final statusColor = _statusColor(delivery['status'] as String);
 
     if (isCompact) {
       return Container(
@@ -48,7 +48,7 @@ class DeliveryCard extends StatelessWidget {
               width: 44, height: 44,
               decoration: BoxDecoration(color: statusColor.withValues(alpha: 0.1), shape: BoxShape.circle),
               child: Icon(
-                delivery.status == 'DELIVERED' ? Icons.check_circle_outline : Icons.cancel_outlined,
+                delivery['status'] == 'COMPLETED' ? Icons.check_circle_outline : Icons.local_shipping_outlined,
                 color: statusColor, size: 22,
               ),
             ),
@@ -57,21 +57,21 @@ class DeliveryCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(delivery.trackingId, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+                  Text(delivery['trackingId'] as String, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
                   const SizedBox(height: 2),
-                  Text(delivery.dropoffAddress, style: const TextStyle(color: Colors.grey, fontSize: 13), overflow: TextOverflow.ellipsis),
+                  Text(delivery['dropoffAddress'] as String, style: const TextStyle(color: Colors.grey, fontSize: 13), overflow: TextOverflow.ellipsis),
                 ],
               ),
             ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                Text('₦${delivery.price.toStringAsFixed(0)}', style: const TextStyle(fontWeight: FontWeight.bold)),
+                Text('₦${delivery['estimatedPrice']}', style: const TextStyle(fontWeight: FontWeight.bold)),
                 const SizedBox(height: 4),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                   decoration: BoxDecoration(color: statusColor.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(20)),
-                  child: Text(_statusLabel(delivery.status), style: TextStyle(color: statusColor, fontSize: 11, fontWeight: FontWeight.bold)),
+                  child: Text(_statusLabel(delivery['status'] as String), style: TextStyle(color: statusColor, fontSize: 11, fontWeight: FontWeight.bold)),
                 ),
               ],
             ),
@@ -81,6 +81,15 @@ class DeliveryCard extends StatelessWidget {
     }
 
     // Full card for active deliveries
+    Map<String, dynamic>? rider;
+    if (delivery['riderId'] != null) {
+      try {
+        rider = MockData.mockRiders.firstWhere((r) => r['id'] == delivery['riderId']);
+      } catch (e) {
+        rider = null;
+      }
+    }
+
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       padding: const EdgeInsets.all(20),
@@ -95,51 +104,55 @@ class DeliveryCard extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(delivery.trackingId, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+              Text(delivery['trackingId'] as String, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                 decoration: BoxDecoration(color: statusColor.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(20)),
-                child: Text(_statusLabel(delivery.status), style: TextStyle(color: statusColor, fontSize: 12, fontWeight: FontWeight.bold)),
+                child: Text(_statusLabel(delivery['status'] as String), style: TextStyle(color: statusColor, fontSize: 12, fontWeight: FontWeight.bold)),
               ),
             ],
           ),
           const SizedBox(height: 16),
-          _routeRow(Icons.my_location, delivery.pickupAddress),
+          _routeRow(Icons.my_location, delivery['pickupAddress'] as String),
           Padding(
             padding: const EdgeInsets.only(left: 11),
             child: Align(alignment: Alignment.centerLeft,
               child: SizedBox(height: 20, child: VerticalDivider(color: Colors.grey.shade300, thickness: 1.5))
             ),
           ),
-          _routeRow(Icons.location_on, delivery.dropoffAddress, iconColor: const Color(0xFFEF4444)),
+          _routeRow(Icons.location_on, delivery['dropoffAddress'] as String, iconColor: const Color(0xFFEF4444)),
           const Divider(height: 24),
-          Row(
-            children: [
-              CircleAvatar(
-                radius: 18,
-                backgroundColor: const Color(0xFF0F172A),
-                child: Text(delivery.riderName[0], style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-              ),
-              const SizedBox(width: 10),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(delivery.riderName, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13)),
-                  Row(children: [
-                    const Icon(Icons.star, color: Color(0xFFD4AF37), size: 14),
-                    const SizedBox(width: 2),
-                    Text('${delivery.riderRating}', style: const TextStyle(fontSize: 12, color: Colors.grey)),
-                  ]),
-                ],
-              ),
-              const Spacer(),
-              Row(children: [
-                const Icon(Icons.access_time, size: 16, color: Colors.grey),
-                const SizedBox(width: 4),
-                Text('ETA: ${delivery.estimatedTime}', style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
-              ]),
-            ],
-          ),
+          
+          if (rider != null)
+            Row(
+              children: [
+                CircleAvatar(
+                  radius: 18,
+                  backgroundColor: const Color(0xFF0F172A),
+                  child: Text(rider['avatar'] as String, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                ),
+                const SizedBox(width: 10),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('${rider['firstName']} ${rider['lastName']}', style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13)),
+                    Row(children: [
+                      const Icon(Icons.star, color: Color(0xFFD4AF37), size: 14),
+                      const SizedBox(width: 2),
+                      Text('${rider['rating']}', style: const TextStyle(fontSize: 12, color: Colors.grey)),
+                    ]),
+                  ],
+                ),
+                const Spacer(),
+                const Row(children: [
+                  Icon(Icons.access_time, size: 16, color: Colors.grey),
+                  SizedBox(width: 4),
+                  Text('ETA: ~15 min', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
+                ]),
+              ],
+            )
+          else
+            const Center(child: Text('Finding rider...', style: TextStyle(color: Colors.grey, fontSize: 13))),
         ],
       ),
     );
