@@ -1,95 +1,103 @@
-class DeliveryModel {
-  final String id;
-  final String trackingId;
-  final String status;
-  final String pickupAddress;
-  final String dropoffAddress;
-  final String packageSize;
-  final double price;
-  final String riderName;
-  final double riderRating;
-  final String estimatedTime;
-  final DateTime createdAt;
-
-  const DeliveryModel({
-    required this.id,
-    required this.trackingId,
-    required this.status,
-    required this.pickupAddress,
-    required this.dropoffAddress,
-    required this.packageSize,
-    required this.price,
-    required this.riderName,
-    required this.riderRating,
-    required this.estimatedTime,
-    required this.createdAt,
-  });
-}
-
 class MockData {
-  static final activeDeliveries = [
-    DeliveryModel(
-      id: '1',
-      trackingId: 'MOVA-8392',
-      status: 'IN_TRANSIT',
-      pickupAddress: '123 Victoria Island, Lagos',
-      dropoffAddress: 'Lekki Phase 1, Lagos',
-      packageSize: 'SMALL',
-      price: 1500,
-      riderName: 'Emeka A.',
-      riderRating: 4.9,
-      estimatedTime: '15 mins',
-      createdAt: DateTime.now().subtract(const Duration(minutes: 20)),
-    ),
+  static const String mockUserId = 'usr_1';
+
+  static const Map<String, dynamic> mockUser = {
+    'id': mockUserId,
+    'firstName': 'John',
+    'lastName': 'Doe',
+    'email': 'john@example.com',
+    'phone': '+2348000000001',
+    'walletBalance': 15000,
+  };
+
+  static const List<Map<String, dynamic>> mockRiders = [
+    {
+      'id': 'rid_1',
+      'firstName': 'Emeka',
+      'lastName': 'A.',
+      'phone': '+2348000000002',
+      'avatar': 'E',
+      'vehicle': {'type': 'BIKE', 'plateNumber': 'LGA-4821-BD', 'make': 'Kawasaki'},
+      'rating': 4.9,
+    },
+    {
+      'id': 'rid_2',
+      'firstName': 'Sarah',
+      'lastName': 'O.',
+      'phone': '+2348000000003',
+      'avatar': 'S',
+      'vehicle': {'type': 'BIKE', 'plateNumber': 'KJA-1234-AB', 'make': 'Honda'},
+      'rating': 4.7,
+    },
   ];
 
-  static final recentDeliveries = [
-    DeliveryModel(
-      id: '2',
-      trackingId: 'MOVA-8391',
-      status: 'DELIVERED',
-      pickupAddress: 'Ikeja, Lagos',
-      dropoffAddress: 'Yaba, Lagos',
-      packageSize: 'MEDIUM',
-      price: 2200,
-      riderName: 'Tunde B.',
-      riderRating: 4.7,
-      estimatedTime: 'Delivered',
-      createdAt: DateTime.now().subtract(const Duration(days: 1)),
-    ),
-    DeliveryModel(
-      id: '3',
-      trackingId: 'MOVA-8388',
-      status: 'DELIVERED',
-      pickupAddress: 'Surulere, Lagos',
-      dropoffAddress: 'Ikorodu, Lagos',
-      packageSize: 'LARGE',
-      price: 3800,
-      riderName: 'Chidi K.',
-      riderRating: 4.8,
-      estimatedTime: 'Delivered',
-      createdAt: DateTime.now().subtract(const Duration(days: 3)),
-    ),
-    DeliveryModel(
-      id: '4',
-      trackingId: 'MOVA-8377',
-      status: 'CANCELLED',
-      pickupAddress: 'Oshodi, Lagos',
-      dropoffAddress: 'Gbagada, Lagos',
-      packageSize: 'SMALL',
-      price: 1200,
-      riderName: 'N/A',
-      riderRating: 0,
-      estimatedTime: 'Cancelled',
-      createdAt: DateTime.now().subtract(const Duration(days: 7)),
-    ),
+  static final List<Map<String, dynamic>> allDeliveries = [
+    {
+      'id': 'del_1',
+      'trackingId': 'MOVA-8392',
+      'status': 'IN_TRANSIT',
+      'userId': 'usr_1',
+      'riderId': 'rid_1',
+      'pickupAddress': '12 Admiralty Way, Lekki Phase 1, Lagos',
+      'dropoffAddress': '3 Ozumba Mbadiwe, Victoria Island, Lagos',
+      'estimatedPrice': 2500,
+      'distanceKm': 5.2,
+      'package': {'category': 'electronics', 'size': 'SMALL', 'description': 'Laptop charger'},
+      'recipient': {'name': 'Jane Smith', 'phone': '+2348000000004'},
+      'events': [
+        {'status': 'CREATED', 'label': 'Order Placed', 'time': '10:02 AM', 'desc': 'Your delivery request was received', 'done': true, 'icon': '📋'},
+        {'status': 'RIDER_ASSIGNED', 'label': 'Rider Assigned', 'time': '10:08 AM', 'desc': 'Emeka A. accepted your order', 'done': true, 'icon': '🏍️'},
+        {'status': 'PACKAGE_RECEIVED', 'label': 'Picked Up', 'time': '10:25 AM', 'desc': 'Package collected from pickup location', 'done': true, 'icon': '📦'},
+        {'status': 'IN_TRANSIT', 'label': 'In Transit', 'time': '10:32 AM', 'desc': 'Rider is heading to your destination', 'done': true, 'icon': '🚀'},
+        {'status': 'RIDER_ARRIVED_DESTINATION', 'label': 'Arriving Soon', 'time': '~10:47 AM', 'desc': 'Estimated 15 minutes away', 'done': false, 'icon': '📍'},
+        {'status': 'COMPLETED', 'label': 'Delivered', 'time': '--', 'desc': 'Package will be delivered to your address', 'done': false, 'icon': '✅'}
+      ],
+      'createdAt': DateTime.now().subtract(const Duration(hours: 1)).toIso8601String(),
+    },
+    {
+      'id': 'del_2',
+      'trackingId': 'MOVA-1145',
+      'status': 'COMPLETED',
+      'userId': 'usr_1',
+      'riderId': 'rid_2',
+      'pickupAddress': 'Ikeja City Mall, Ikeja',
+      'dropoffAddress': 'Yaba, Lagos',
+      'estimatedPrice': 3500,
+      'distanceKm': 12.5,
+      'package': {'category': 'clothing', 'size': 'MEDIUM', 'description': 'Two pairs of shoes'},
+      'recipient': {'name': 'Michael O.', 'phone': '+2348000000005'},
+      'events': [
+        {'status': 'CREATED', 'label': 'Order Placed', 'time': 'Yesterday 2:00 PM', 'desc': 'Your delivery request was received', 'done': true, 'icon': '📋'},
+        {'status': 'COMPLETED', 'label': 'Delivered', 'time': 'Yesterday 3:15 PM', 'desc': 'Package delivered successfully', 'done': true, 'icon': '✅'}
+      ],
+      'createdAt': DateTime.now().subtract(const Duration(days: 1)).toIso8601String(),
+    },
+    {
+      'id': 'del_3',
+      'trackingId': 'MOVA-9921',
+      'status': 'SEARCHING_RIDER',
+      'userId': 'usr_1',
+      'riderId': null,
+      'pickupAddress': 'Gbagada Phase 2, Lagos',
+      'dropoffAddress': 'Surulere, Lagos',
+      'estimatedPrice': 1800,
+      'distanceKm': 8.0,
+      'package': {'category': 'documents', 'size': 'SMALL', 'description': 'Legal papers'},
+      'recipient': {'name': 'Law Firm', 'phone': '+2348000000006'},
+      'events': [
+        {'status': 'CREATED', 'label': 'Order Placed', 'time': 'Just now', 'desc': 'Your delivery request was received', 'done': true, 'icon': '📋'},
+        {'status': 'SEARCHING_RIDER', 'label': 'Searching for rider', 'time': '...', 'desc': 'Finding the nearest available rider', 'done': false, 'icon': '🔍'}
+      ],
+      'createdAt': DateTime.now().toIso8601String(),
+    }
   ];
 
-  static final walletTransactions = [
-    {'type': 'credit', 'amount': 5000, 'label': 'Wallet Top-up', 'date': '2 days ago'},
-    {'type': 'debit', 'amount': 1500, 'label': 'Delivery MOVA-8392', 'date': 'Today'},
-    {'type': 'debit', 'amount': 2200, 'label': 'Delivery MOVA-8391', 'date': 'Yesterday'},
-    {'type': 'credit', 'amount': 10000, 'label': 'Wallet Top-up', 'date': '5 days ago'},
-    {'type': 'debit', 'amount': 3800, 'label': 'Delivery MOVA-8388', 'date': '3 days ago'},
+  static final List<Map<String, dynamic>> activeDeliveries = allDeliveries.where((d) => d['status'] != 'COMPLETED' && d['status'] != 'CANCELLED').toList();
+  static final List<Map<String, dynamic>> recentDeliveries = allDeliveries.where((d) => d['status'] == 'COMPLETED' || d['status'] == 'CANCELLED').toList();
+
+  static final List<Map<String, dynamic>> walletTransactions = [
+    {'id': 'tx_1', 'type': 'CREDIT', 'amount': 20000, 'desc': 'Card funding', 'date': DateTime.now().subtract(const Duration(days: 2)).toIso8601String()},
+    {'id': 'tx_2', 'type': 'DEBIT', 'amount': 2500, 'desc': 'Delivery MOVA-8392', 'date': DateTime.now().subtract(const Duration(hours: 1)).toIso8601String()},
+    {'id': 'tx_3', 'type': 'DEBIT', 'amount': 3500, 'desc': 'Delivery MOVA-1145', 'date': DateTime.now().subtract(const Duration(days: 1)).toIso8601String()},
   ];
 }

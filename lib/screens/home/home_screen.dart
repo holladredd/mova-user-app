@@ -87,7 +87,7 @@ class _HomeTab extends StatelessWidget {
                           ],
                         ),
                         const SizedBox(height: 20),
-                        const Text('Good morning, Alex 👋', style: TextStyle(color: Colors.white70, fontSize: 14)),
+                        Text('Good morning, ${MockData.mockUser['firstName']} 👋', style: const TextStyle(color: Colors.white70, fontSize: 14)),
                         const SizedBox(height: 4),
                         const Text('Where are we sending today?', style: TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold)),
                       ],
