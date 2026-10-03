@@ -9,6 +9,7 @@ class CreateDeliveryScreen extends StatefulWidget {
 class _CreateDeliveryScreenState extends State<CreateDeliveryScreen> {
   final _pickupCtrl = TextEditingController();
   final _dropoffCtrl = TextEditingController();
+  final _packageContentCtrl = TextEditingController();
   int _step = 0;
   String _selectedSize = 'SMALL';
   bool _loading = false;
@@ -148,12 +149,28 @@ class _CreateDeliveryScreenState extends State<CreateDeliveryScreen> {
                       Text(size['desc'] as String, style: TextStyle(color: isSelected ? Colors.white70 : Colors.grey, fontSize: 13)),
                     ],
                   )),
-                  Text(size['price'] as String, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: isSelected ? gold : null)),
                 ],
               ),
             ),
           );
         }),
+        const SizedBox(height: 32),
+        const Text('Package Contents (Required)', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+        const SizedBox(height: 8),
+        const Text('For security, declare what is inside. Riders won\'t see this until they are hired.', style: TextStyle(color: Colors.grey, fontSize: 12)),
+        const SizedBox(height: 12),
+        TextField(
+          controller: _packageContentCtrl,
+          maxLines: 3,
+          decoration: InputDecoration(
+            hintText: 'E.g., 2 Laptops, legal documents, etc...',
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: const BorderSide(color: Color(0xFFE2E8F0))),
+            enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: const BorderSide(color: Color(0xFFE2E8F0))),
+            focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: BorderSide(color: charcoal, width: 2)),
+            filled: true, fillColor: const Color(0xFFF8F9FA),
+            contentPadding: const EdgeInsets.all(16),
+          ),
+        ),
       ],
     );
   }
@@ -171,6 +188,7 @@ class _CreateDeliveryScreenState extends State<CreateDeliveryScreen> {
         _confirmRow('Pickup', _pickupCtrl.text.isEmpty ? '123 Victoria Island, Lagos' : _pickupCtrl.text, Icons.my_location),
         _confirmRow('Drop-off', _dropoffCtrl.text.isEmpty ? 'Lekki Phase 1, Lagos' : _dropoffCtrl.text, Icons.location_on, iconColor: Colors.red),
         _confirmRow('Package Size', '${sizeData['label']}  (${sizeData['desc']})', Icons.inventory_2_outlined),
+        _confirmRow('Declared Contents', _packageContentCtrl.text.isEmpty ? 'Not specified' : _packageContentCtrl.text, Icons.verified_user_outlined, iconColor: Colors.green),
         const Divider(height: 32),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
