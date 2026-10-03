@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../data/mock_data.dart';
+
 class TrackDeliveryScreen extends StatefulWidget {
   const TrackDeliveryScreen({super.key});
   @override
@@ -9,15 +11,18 @@ class TrackDeliveryScreen extends StatefulWidget {
 class _TrackDeliveryScreenState extends State<TrackDeliveryScreen> {
   final _trackCtrl = TextEditingController(text: 'MOVA-8392');
   bool _isTracking = true;
+  Map<String, dynamic>? _delivery = MockData.allDeliveries.firstWhere((d) => d['trackingId'] == 'MOVA-8392');
   
-  final List<Map<String, dynamic>> _steps = [
-    {'label': 'Order Placed', 'time': '10:02 AM', 'desc': 'Your delivery request was received', 'done': true},
-    {'label': 'Rider Assigned', 'time': '10:08 AM', 'desc': 'Emeka A. accepted your order', 'done': true},
-    {'label': 'Picked Up', 'time': '10:25 AM', 'desc': 'Package collected from Victoria Island', 'done': true},
-    {'label': 'In Transit', 'time': '10:32 AM', 'desc': 'Rider is heading to your destination', 'done': true},
-    {'label': 'Arriving Soon', 'time': '~10:47 AM', 'desc': 'Estimated 15 minutes away', 'done': false},
-    {'label': 'Delivered', 'time': '--', 'desc': 'Package will be delivered at your address', 'done': false},
-  ];
+  void _search() {
+    setState(() {
+      _isTracking = true;
+      try {
+        _delivery = MockData.allDeliveries.firstWhere((d) => d['trackingId'] == _trackCtrl.text.trim());
+      } catch (e) {
+        _delivery = null;
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +51,7 @@ class _TrackDeliveryScreenState extends State<TrackDeliveryScreen> {
                 ),
                 const SizedBox(width: 12),
                 ElevatedButton(
-                  onPressed: () => setState(() => _isTracking = true),
+                  onPressed: _search,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: charcoal,
                     padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
@@ -58,7 +63,7 @@ class _TrackDeliveryScreenState extends State<TrackDeliveryScreen> {
             ),
           ),
 
-          if (_isTracking) Expanded(
+          if (_isTracking && _delivery != null) Expanded(
             child: SingleChildScrollView(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Column(
@@ -101,43 +106,46 @@ class _TrackDeliveryScreenState extends State<TrackDeliveryScreen> {
                   const SizedBox(height: 20),
 
                   // Rider info
-                  Container(
-                    padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).brightness == Brightness.dark ? const Color(0xFF1A1A1A) : Colors.white,
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    child: Row(
-                      children: [
-                        CircleAvatar(
-                          radius: 24,
-                          backgroundColor: charcoal,
-                          child: const Text('E', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18)),
-                        ),
-                        const SizedBox(width: 12),
-                        const Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                  if (_delivery!['riderId'] != null) (() {
+                    final rider = MockData.mockRiders.firstWhere((r) => r['id'] == _delivery!['riderId']);
+                    return Container(
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).brightness == Brightness.dark ? const Color(0xFF1A1A1A) : Colors.white,
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      child: Row(
+                        children: [
+                          CircleAvatar(
+                            radius: 24,
+                            backgroundColor: charcoal,
+                            child: Text(rider['avatar'], style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18)),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('${rider['firstName']} ${rider['lastName']}', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                                Row(children: [
+                                  const Icon(Icons.star, color: Color(0xFFD4AF37), size: 14),
+                                  const SizedBox(width: 4),
+                                  Text('${rider['rating']}  ·  ${rider['vehicle']['make']} ${rider['vehicle']['type']} · ${rider['vehicle']['plateNumber']}', style: const TextStyle(color: Colors.grey, fontSize: 12)),
+                                ]),
+                              ],
+                            ),
+                          ),
+                          Row(
                             children: [
-                              Text('Emeka A.', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                              Row(children: [
-                                Icon(Icons.star, color: Color(0xFFD4AF37), size: 14),
-                                SizedBox(width: 4),
-                                Text('4.9  ·  Kawasaki Bike · LGA-4821-BD', style: TextStyle(color: Colors.grey, fontSize: 12)),
-                              ]),
+                              _iconCircle(Icons.phone, const Color(0xFF22C55E)),
+                              const SizedBox(width: 8),
+                              _iconCircle(Icons.message_outlined, charcoal),
                             ],
                           ),
-                        ),
-                        Row(
-                          children: [
-                            _iconCircle(Icons.phone, const Color(0xFF22C55E)),
-                            const SizedBox(width: 8),
-                            _iconCircle(Icons.message_outlined, charcoal),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
+                        ],
+                      ),
+                    );
+                  })() else const Center(child: Text('Searching for nearest rider...')),
                   const SizedBox(height: 20),
 
                   // Timeline
@@ -152,9 +160,9 @@ class _TrackDeliveryScreenState extends State<TrackDeliveryScreen> {
                       children: [
                         const Text('Delivery Timeline', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
                         const SizedBox(height: 20),
-                        ...List.generate(_steps.length, (i) {
-                          final step = _steps[i];
-                          final isLast = i == _steps.length - 1;
+                        ...List.generate((_delivery!['events'] as List).length, (i) {
+                          final step = _delivery!['events'][i];
+                          final isLast = i == (_delivery!['events'] as List).length - 1;
                           return Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [

@@ -71,9 +71,9 @@ class _CreateDeliveryScreenState extends State<CreateDeliveryScreen> {
                     setState(() => _step++);
                   } else {
                     setState(() => _loading = true);
-                    await Future.delayed(const Duration(seconds: 2));
+                    await Future.delayed(const Duration(seconds: 1));
                     if (mounted) {
-                      Navigator.pushNamedAndRemoveUntil(context, '/home', (_) => false);
+                      Navigator.pushNamed(context, '/searching-rider');
                     }
                   }
                 },
