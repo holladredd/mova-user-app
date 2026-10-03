@@ -4,6 +4,7 @@ import 'screens/splash_screen.dart';
 import 'screens/onboarding_screen.dart';
 import 'screens/auth/login_screen.dart';
 import 'screens/auth/register_screen.dart';
+import 'screens/auth/security_lock_screen.dart';
 import 'screens/home/home_screen.dart';
 import 'screens/delivery/create_delivery_screen.dart';
 import 'screens/delivery/track_delivery_screen.dart';
@@ -72,6 +73,7 @@ class MovaUserApp extends StatelessWidget {
       routes: {
         '/splash': (_) => const SplashScreen(),
         '/onboarding': (_) => const OnboardingScreen(),
+        '/auth-lock': (_) => const SecurityLockScreen(),
         '/login': (_) => const LoginScreen(),
         '/register': (_) => const RegisterScreen(),
         '/home': (_) => const HomeScreen(),

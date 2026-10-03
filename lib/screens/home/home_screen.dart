@@ -137,7 +137,38 @@ class _HomeTab extends StatelessWidget {
                       )),
                     ],
                   ),
-                  const SizedBox(height: 32),
+                  const SizedBox(height: 24),
+
+                  // KYC Banner
+                  Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: Colors.orange.withOpacity(0.1),
+                      border: Border.all(color: Colors.orange.withOpacity(0.3)),
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: Row(
+                      children: [
+                        const Icon(Icons.security, color: Colors.orange, size: 28),
+                        const SizedBox(width: 12),
+                        const Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text('Account Verification', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.orange)),
+                              SizedBox(height: 4),
+                              Text('Please verify your identity with a valid ID to remove sending limits.', style: TextStyle(color: Colors.grey, fontSize: 12)),
+                            ],
+                          ),
+                        ),
+                        TextButton(
+                          onPressed: () {},
+                          child: const Text('Verify', style: TextStyle(color: Colors.orange, fontWeight: FontWeight.bold)),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 24),
 
                   // Promo banner
                   Container(

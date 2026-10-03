@@ -33,7 +33,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
     _controller.forward();
     Future.delayed(const Duration(seconds: 3), () {
       if (mounted) {
-        Navigator.pushReplacementNamed(context, '/onboarding');
+        Navigator.pushReplacementNamed(context, '/auth-lock');
       }
     });
   }
