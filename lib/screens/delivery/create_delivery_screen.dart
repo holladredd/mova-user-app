@@ -162,8 +162,10 @@ class _CreateDeliveryScreenState extends State<CreateDeliveryScreen> {
         TextField(
           controller: _packageContentCtrl,
           maxLines: 3,
+          style: const TextStyle(color: Color(0xFF0F172A)),
           decoration: InputDecoration(
             hintText: 'E.g., 2 Laptops, legal documents, etc...',
+            hintStyle: const TextStyle(color: Colors.grey),
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: const BorderSide(color: Color(0xFFE2E8F0))),
             enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: const BorderSide(color: Color(0xFFE2E8F0))),
             focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: BorderSide(color: charcoal, width: 2)),
@@ -220,8 +222,10 @@ class _CreateDeliveryScreenState extends State<CreateDeliveryScreen> {
   Widget _addressField(String hint, IconData icon, {TextEditingController? controller, required Color accentColor}) {
     return TextField(
       controller: controller,
+      style: const TextStyle(color: Color(0xFF0F172A)),
       decoration: InputDecoration(
         hintText: hint,
+        hintStyle: const TextStyle(color: Colors.grey),
         prefixIcon: Icon(icon, color: accentColor),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: const BorderSide(color: Color(0xFFE2E8F0))),
         enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: const BorderSide(color: Color(0xFFE2E8F0))),
@@ -243,9 +247,40 @@ class _CreateDeliveryScreenState extends State<CreateDeliveryScreen> {
       title: Text(label, style: const TextStyle(fontWeight: FontWeight.w600)),
       subtitle: Text(address, style: const TextStyle(fontSize: 13, color: Colors.grey)),
       trailing: const Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey),
-      onTap: () => setState(() {
-        _pickupCtrl.text = address;
-      }),
+      onTap: () {
+        showModalBottomSheet(
+          context: context,
+          shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+          builder: (context) => SafeArea(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Padding(
+                  padding: EdgeInsets.all(20),
+                  child: Text('Use this address for:', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+                ),
+                ListTile(
+                  leading: const Icon(Icons.my_location),
+                  title: const Text('Pickup'),
+                  onTap: () {
+                    setState(() => _pickupCtrl.text = address);
+                    Navigator.pop(context);
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.location_on, color: Colors.red),
+                  title: const Text('Drop-off'),
+                  onTap: () {
+                    setState(() => _dropoffCtrl.text = address);
+                    Navigator.pop(context);
+                  },
+                ),
+                const SizedBox(height: 10),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 
